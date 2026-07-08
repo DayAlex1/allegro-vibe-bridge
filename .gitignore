@@ -1,5 +1,4 @@
-# Vibe bridge workspace
-workspace/
+# Vibe bridge workspace (tracked)
 temp/*
 !temp/.gitkeep
 *.log
