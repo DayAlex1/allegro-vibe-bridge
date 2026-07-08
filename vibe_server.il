@@ -4,11 +4,33 @@
  */
 
 (defvar vibeTimerId nil)
+(defvar vibeWorkspaceDir nil)
+
+; 自动获取当前脚本所在的目录 (在 load 文件时执行)
+(let (scriptPath dirParts)
+    (if (and (boundp 'piport) piport)
+        (setq scriptPath (get_filename piport))
+        (setq scriptPath nil)
+    )
+    
+    (if (and scriptPath (stringp scriptPath) (neq scriptPath "") (neq scriptPath "*ciwInPort*"))
+        (progn
+            ; 解析路径（兼容正反斜杠），去掉最后的文件名，拼接上 workspace
+            dirParts = (parseString scriptPath "/\\")
+            dirParts = (reverse (cdr (reverse dirParts)))
+            vibeWorkspaceDir = (strcat (buildString dirParts "/") "/workspace/")
+        )
+        (progn
+            ; Fallback: 默认使用 Allegro 的当前工作目录
+            vibeWorkspaceDir = (strcat (getWorkingDir) "/workspace/")
+        )
+    )
+)
 
 (defun vibeProcessHandler (window timerId elapsedTime)
     (let (workspaceDir inFile outFile inPort outPort code line result)
         
-        workspaceDir = "<YOUR_PROJECT_PATH>/workspace/"
+        workspaceDir = vibeWorkspaceDir
         inFile = strcat(workspaceDir "vibe_in.il")
         outFile = strcat(workspaceDir "vibe_out.log")
         
