@@ -2,6 +2,7 @@
 temp/*
 !temp/.gitkeep
 *.log
+!workspace/*.log
 
 # Reference PDFs (copyrighted, don't commit)
 *.pdf
