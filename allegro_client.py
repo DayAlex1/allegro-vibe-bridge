@@ -23,7 +23,7 @@ def send_code_to_allegro(code: str, timeout: int = 10):
             pass # File might be locked, but typically shouldn't be
 
     # 3. Write code to input file
-    print("\n[Antigravity] Sending code to Allegro...", flush=True)
+    print("\n[allegro bridge] Sending code to Allegro...", flush=True)
     with open(IN_FILE, "w", encoding="utf-8") as f:
         f.write(code)
 
@@ -44,7 +44,7 @@ def send_code_to_allegro(code: str, timeout: int = 10):
                     print(f"\033[91m{result}\033[0m") # Red
                 return
             except Exception as e:
-                print(f"[Antigravity Error] Could not read output: {e}")
+                print(f"[allegro bridge Error] Could not read output: {e}")
                 return
         
         # Poll interval

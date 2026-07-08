@@ -1,7 +1,11 @@
 # Vibe bridge workspace
 workspace/
-temp/
+temp/*
+!temp/.gitkeep
 *.log
+
+# Reference PDFs (copyrighted, don't commit)
+*.pdf
 
 # Python caches
 __pycache__/
