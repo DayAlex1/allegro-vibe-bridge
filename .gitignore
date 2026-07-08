@@ -1,0 +1,8 @@
+# Vibe bridge workspace
+workspace/
+temp/
+*.log
+
+# Python caches
+__pycache__/
+*.pyc
