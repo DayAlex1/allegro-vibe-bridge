@@ -187,3 +187,144 @@
       )
   )
   ```
+
+## 状态与检查属性 (Status & Checks)
+
+### `design->drcs`
+- **功能**：获取设计中所有的 DRC（Design Rule Check）违规列表。
+- **示例**：
+  ```skill
+  drc_count = length(axlDBGetDesign()->drcs)
+  ```
+
+### `net->unconnected`
+- **功能**：获取指定网络中未连接（Unconnected / Ratsnest）的引脚数量。
+- **示例**：
+  ```skill
+  total_unconnected = 0
+  foreach(net design->nets
+      if(net->unconnected then total_unconnected = total_unconnected + net->unconnected)
+  )
+  ```
+
+### 孤立元素（Dangling/Island）检查
+- **原理**：使用 `axlDBGetConnect(obj t)`。对于走线（`path`）和过孔（`via`），如果返回的连接数 `< 2`，通常意味着是一端悬空（Dangling）；对于铺铜（`shape`），如果连接数 `<= 1`，则通常意味着是一块不连任何其他元素的孤岛（Isolated shape）。
+
+### Shape 状态判定
+- **属性**：
+  - `shape->dynamicGroup`：如果不为 `nil`，说明这是一个动态铜皮（Dynamic shape）；如果为 `nil`，说明它是静态铜皮。
+  - `shape->fillOOD`：如果为 `t`，说明该动态铜皮处于 "Out of Date" 状态，需要更新（Update to Smooth）。
+
+## 器件与摆放 (Placement)
+
+### `design->components` 与 `comp->symbol`
+- **功能**：获取设计中所有的逻辑器件。如果一个器件尚未摆放在版图上，它的 `symbol` 属性为 `nil`。
+- **示例**：
+  ```skill
+  unplaced = 0
+  foreach(comp design->components
+      if(comp->symbol == nil then unplaced = unplaced + 1)
+  )
+  ```
+
+## 形状与面积运算 (Shapes & Polygons)
+
+### `axlPolyFromDB`
+- **功能**：将数据库对象（如 shape, path）转化为多边形对象（Polygon），用于数学运算。
+- **参数**：数据库对象 (shape)。
+- **返回值**：多边形对象列表（通常取第一个元素 `car()`）。
+- **示例**：
+  ```skill
+  poly = car(axlPolyFromDB(shape))
+  ```
+
+### `axlPolyArea`
+- **功能**：计算多边形对象的面积。
+- **参数**：多边形对象。
+- **返回值**：面积数值（实数），单位取决于设计的当前单位设置。
+- **使用场景**：S05 铜密度与残铜率检查，用于统计各层铺铜的精确面积。
+- **示例**：
+  ```skill
+  area = axlPolyArea(poly)
+  ```
+
+## 几何计算与距离 (Geometry & Distance)
+
+### `axlDistance`
+- **功能**：计算两个对象或坐标点之间的最短距离。
+- **参数**：对象A，对象B（可以是坐标点、线段、shape等）。
+- **返回值**：距离数值（实数）。
+- **使用场景**：S03 间距与边距检查，例如计算 Die 到 Package Edge 的距离。
+- **示例**：
+  ```skill
+  dist = axlDistance(pin1 pin2)
+  ```
+
+## 封装与引脚信息 (Padstack & Pins)
+
+### `pin->definition->name`
+- **功能**：获取引脚或过孔对应的 Padstack 定义名称。
+- **示例**：
+  ```skill
+  pad_name = via->definition->name
+  ```
+
+### `axlDBGetPad`
+- **功能**：根据指定的 padstack、板层和类型，提取对应的焊盘对象。
+- **参数**：
+  1. padstack 定义对象或名称
+  2. 层名（如 `"TOP"`）
+  3. 焊盘类型（如 `"REGULAR"`, `"ANTI"` 等）
+- **返回值**：焊盘对象，可以通过其获取 shape 或 bBox。
+- **使用场景**：S01 提取过孔钻孔尺寸和 S10 获取 Anti-pad 尺寸。
+- **示例**：
+  ```skill
+  pad = axlDBGetPad(via->definition "TOP" "ANTI")
+  ```
+
+## 层与叠层信息 (Layers & Stackup)
+
+### `axlGetParam("paramLayerGroup:ETCH")->groupMembers`
+- **功能**：获取设计中所有的电气层（Etch layers）的有序列表，从 Top 层到底部 Bottom 层。
+- **返回值**：层名字符串组成的列表，例如 `("TOP" "L2_GND" "L3_IN" "BOTTOM")`。
+- **使用场景**：S02 叠孔与过孔结构检查，需要判断两个 via 跨越的层数，或寻找相邻参考平面（S12）。
+- **示例**：
+  ```skill
+  etch_layers = axlGetParam("paramLayerGroup:ETCH")->groupMembers
+  ```
+
+## 走线与线段分析 (Clines & Segments)
+
+### `path->segments`
+- **功能**：走线（Cline / Path）由多个线段（segments）组成，通过该属性可以遍历所有的单段走线。
+- **相关属性**：
+  - `segment->width`：获取当前线段的线宽。
+  - `segment->startEnd`：获取线段的起点和终点坐标 `((x1 y1) (x2 y2))`。
+  - `segment->layer`：所在层。
+- **使用场景**：S06 走线质量与几何检查，逐段检查走线线宽是否满足规则，以及相邻线段是否存在锐角。
+- **示例**：
+  ```skill
+  foreach(seg path->segments
+      if(seg->width < min_width then
+          printf("Violating segment found at %L\n" seg->startEnd)
+      )
+  )
+  ```
+
+## 对象修改与删除 (Modification & Deletion)
+
+### `axlDeleteObject`
+- **功能**：从数据库中删除一个或多个对象。
+- **参数**：单个 dbid 或 dbid 列表。
+- **返回值**：成功返回 `t`，失败返回 `nil`。
+- **使用场景**：S04 清理与完整性检查，当检测到 dangling line 或孤立过孔时，可用此命令直接清除残留。
+- **示例**：
+  ```skill
+  axlDeleteObject(dangling_via)
+  ```
+
+## 规则与高速信号 (Constraints & High-speed)
+
+### `axlCNSGetPhysical` 与 `axlCNSGetSpacing`
+- **功能**：查询 Constraint Manager 中的物理规则（线宽、颈状线）和间距规则。
+- **使用场景**：S09 信号质量与阻抗走线检查。结合 `axlMKSConvert` 转换单位，用于自动化提取设计要求，避免硬编码规则数值。
