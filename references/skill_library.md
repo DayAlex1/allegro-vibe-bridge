@@ -328,7 +328,6 @@
 ### `axlCNSGetPhysical` 与 `axlCNSGetSpacing`
 - **功能**：查询 Constraint Manager 中的物理规则（线宽、颈状线）和间距规则。
 - **使用场景**：S09 信号质量与阻抗走线检查。结合 `axlMKSConvert` 转换单位，用于自动化提取设计要求，避免硬编码规则数值。
-<<<<<<< HEAD
 
 
 ## 中文乱码与编码问题 (Chinese Encoding Issues)
@@ -361,5 +360,4 @@
      python -c "import codecs; data = codecs.open('script.il', 'r', 'utf-8').read(); codecs.open('script.il', 'w', 'gbk').write(data)"
      ```
    - 尽量避免使用局部替换工具（如 `multi_replace_file_content`）去修改已存在的含有中文的 GBK 文件，因为框架的默认行为可能会强制写入 UTF-8，导致文件编码被破坏混合。遇到大修情况，建议采用全量写入后整体转换的方法。
-=======
->>>>>>> f34bbc38dc1b6be0a8e0bf1a09d50bb32e547f67
+
