@@ -1,4 +1,4 @@
----
+﻿---
 name: allegro-vibe
 description: |
   Use this skill whenever the user wants to interact with Cadence Allegro PCB design through the Vibe Bridge — querying design data (stackup, constraints, components, nets), executing SKILL code in an open Allegro session, or debugging SKILL scripts. Triggers on: mentions of Allegro, SKILL, PCB, Cadence, constraint manager, stackup, layout queries, vibe bridge, or any request to "get/check/query/find" design parameters from a board file. Also triggers when the user references the allegro_vibe_bridge project or asks to "send code to Allegro".
@@ -6,264 +6,127 @@ description: |
 
 # Allegro Vibe Bridge — AI Agent 工作流
 
-> **目标读者：AI agent（Claude Code 等）。** 人类用户请阅读 [`README.md`](./README.md)。
+> **目标读者：AI Agent（Claude Code、Antigravity 等）。** 人类用户请阅读 [`README.md`](./README.md)。
 
-## 依赖说明
-
-本工作流的 Phase 1 依赖 [notebooklm-skill](https://github.com/PleasePrompto/notebooklm-skill) 来查询 SKILL API 文档。用户需要自行创建 NotebookLM 知识库：
-
-**引导用户**获取 Cadence SKILL 相关文档（如 SKILL Language User Guide、SKILL Language Reference、Allegro SKILL API 参考等），上传到 [Google NotebookLM](https://notebooklm.google.com/)，将笔记本命名为 `allegro-skill-programming-guide`。
-
-在知识库就绪之前，回退方案为：优先查 `references/skill_library.md`，若仍无结果则直接告知用户需要先创建知识库才能继续。
-
-如果你的 AI agent 环境不支持 notebooklm-skill，跳过 Phase 1 的 NotebookLM 查询步骤，仅使用 `references/skill_library.md`。
+本工作流指导 AI Agent 通过 Vibe Bridge 与 Cadence Allegro PCB 系统交互，涵盖 **API 知识查询**、**代码下发与调试**及 **IPC 文件通信**。
 
 ---
 
-## 项目位置
+## 工作流总览
 
+交互过程分为四个阶段 (Phase 1 ➔ Phase 4)：
+
+```
+[ 用户需求 ]
+     │
+     ▼
+Phase 1: 需求分析与知识查询 ──► 优先查本地库 skill_library.md ──► 未命中则调用 NotebookLM 查询
+     │
+     ▼
+Phase 2: 编写与下发 SKILL 代码 ──► 通过 allegro_client.py 下发 ──► 触发 IPC 通信
+     │
+     ▼
+Phase 3: 调试与迭代反馈 ───────► 轮询 vibe_out.log 获取返回 ──► 解析结果（报错则回 Phase 2 修改）
+     │
+     ▼
+Phase 4: 验证与清理归档 ───────► 确认结果无误后归档至 archive/ ──► 清理 temp/ ──► 更新本地知识库
+```
+
+---
+
+## 环境与目录规范
+
+### 1. 核心项目文件
 ```
 <YOUR_PROJECT_PATH>\
+├── vibe_server.il              # Allegro 端轮询服务（在 Allegro 中 skill load 启动）
+├── allegro_client.py           # 客户端代码下发工具（支持单行 REPL 和文件运行）
+├── references/skill_library.md # 本地 SKILL 函数知识库（优先查询）
+├── temp/                       # 临时脚本目录（任务完成后清理）
+└── archive/                    # 验证通过的 SKILL 脚本归档库
 ```
 
-关键文件：
-- `vibe_server.il` — Allegro 端定时轮询服务（在 Allegro 中 `skill load` 即启动）
-- `allegro_client.py` — IDE 端 Python 客户端
-- `workspace/` — IPC 临时文件目录
-- `references/skill_library.md` — **本地 SKILL 函数知识库（优先查阅！）**
-
-## 目录规范
-
-**主目录只保留核心文件，禁止在根目录创建任何 .il 文件！**
-
-- 所有桥接过程中生成的临时 .il 脚本一律放入 `temp/` 子目录
-- `temp/` 目录不存在时先创建再写入
-- 用完的临时脚本在任务完成后应清理（但保留 `temp/` 目录本身）
-- 文件模式下引用 .il 文件时使用相对路径 `temp/xxx.il`，如：
+### 2. 目录规范
+**根目录仅保留核心桥接工具文件，禁止在根目录创建业务性 `.il` 文件。**
+- **临时脚本**：所有 `.il` 测试脚本必须放入 `temp/` 目录。
+- **命令行调用**：文件模式传入相对路径 `temp/<filename>.il`。
   ```bash
-  python allegro_client.py -f temp/query_spacing.il
+  mkdir -p temp
+  python allegro_client.py -f temp/query_stackup.il
   ```
 
----
-
-## 工作流概览
-
-每个 Allegro 查询任务都遵循以下模式：
-
-```
-用户需求 → 查知识库获取 API → 写代码 → 通过 Bridge 执行 → 调试迭代 → 呈现结果 → 清理与归纳
-```
-
-## 前置条件
-
-在执行任何代码之前，先确认：
-- Allegro 已打开设计文件
-- `vibe_server.il` 已 load（加载即启动，无需手动调用 `vibeStartServer()`）
-- 用户已安装 notebooklm-skill（可选，参见[依赖说明](#依赖说明)）
-- 用户的 NotebookLM 知识库中已有 "Allegro SKILL Programming Guide"（由用户自行获取的 Cadence SKILL 文档创建）。如果没有，引导用户获取文档并创建知识库
+### 3. 前置检查
+- Allegro 已打开目标板文件 (Design)。
+- `vibe_server.il` 已在 Allegro 内加载（`load` 后自动监听）。
+- **外部知识库检查**：如需复杂 API 探索，检查是否可用 [notebooklm-skill](https://github.com/PleasePrompto/notebooklm-skill)，且 NotebookLM 包含相关笔记本。
+  - **笔记本内容要求**：包含 **SKILL 语法规范**与 **Allegro AXL 函数说明**（含参数解释与返回值约定）。
+  - **缺失引导**：若缺少相关环境，主动询问用户是否需要协助配置。
 
 ---
 
-## Phase 1: 查询 SKILL API 知识
+## Phase 1: 需求分析与知识查询
 
-**核心原则：永远不要凭记忆猜测 SKILL 函数名和参数。** SKILL API 有大量版本差异和命名陷阱。查询优先级为：
+**核心原则：切勿凭记忆猜测 SKILL 函数名与参数。** SKILL API 存在版本差异与命名细节，按以下顺序查询：
 
-1. **优先查 `references/skill_library.md`**（本地沉淀的知识，最贴合本项目实际）
-2. 若没有，通过 NotebookLM 查询 "Allegro SKILL Programming Guide" 知识库
-3. 若 NotebookLM 不可用，告知用户需要创建知识库或自行查阅 Cadence SKILL 文档
+### 1A. 优先查阅本地知识库
+- 编写代码前，首选查询 `references/skill_library.md` 获取已验证的 API 用法与范例代码。
 
-### 通过 NotebookLM 查询（本地知识库无结果时）
-
-> **知识库来源**：引导用户自行获取 Cadence SKILL 文档（SKILL Language User Guide、SKILL Language Reference、Allegro SKILL API 参考等），上传到 NotebookLM 创建名为 `allegro-skill-programming-guide` 的知识库。
-
-1. 检查 auth：`python scripts/run.py auth_manager.py status`（在 `<NOTEBOOKLM_SKILL_PATH>` 下）
-2. 查询 API：
-   ```bash
-   cd "<NOTEBOOKLM_SKILL_PATH>"
-   python scripts/run.py ask_question.py --notebook-id allegro-skill-programming-guide \
-     --question "你的问题（要具体，包含你想做什么、参数类型、返回值）"
-   ```
-3. **追问直到信息完整**：NotebookLM 每次回答后会问"Is that ALL you need?"，必须确认以下信息完整后再进入 Phase 2：
-   - 函数名和完整签名
-   - 每个参数的含义和可选值
-   - 返回值类型和单位
-   - 至少一个代码示例
-
-### 查询技巧
-- 第一次查询要具体但全面，一次性问清楚
-- 追问时带上上下文（函数名、场景），因为每次都是新 session
-- 典型追问：层名格式（"TOP" vs "ETCH/TOP"）、单位转换、错误处理
+### 1B. 调用 NotebookLM 查询（本地库未命中时）
+若 `references/skill_library.md` 未命中：
+- 调用 [notebooklm-skill](https://github.com/PleasePrompto/notebooklm-skill) 向外部知识库查询。
+- 明确提供编程意图与待查询的函数/接口。
+- 结合查询结果进入 Phase 2 编写代码。
 
 ---
 
-## Phase 2: 编写并执行 SKILL 代码
+## Phase 2: 编写与下发 SKILL 代码
 
-### Bridge 三种模式
+### 1. Client 客户端执行模式
 
-| 模式 | 命令 | 适用场景 |
-|------|------|----------|
-| **REPL 单行**（推荐首选）| `python allegro_client.py "<code>"` | 单次函数调用、简单查询、调试 |
-| **文件模式** | `python allegro_client.py -f <file.il>` | 多步逻辑、循环、条件判断 |
-| **交互 REPL** | `python allegro_client.py` | 需要连续交互探索时 |
+| 运行模式 | 命令示例 | 适用场景 |
+| :--- | :--- | :--- |
+| **单行内联 (REPL)**（推荐首选） | `python allegro_client.py "<code>"` | 单个函数测试、变量查询或简单断言 |
+| **文件驱动模式** | `python allegro_client.py -f temp/<file>.il` | 循环、复杂逻辑或多行脚本 |
+| **交互会话模式** | `python allegro_client.py` | 复杂问题排查时的持续交互调试 |
 
-### ⚠️ 关键踩坑规则
-
-#### 规则 0：临时 .il 文件必须放入 `temp/` 目录！
-
-根目录只保留 `vibe_server.il`、`allegro_client.py` 两个核心文件。所有桥接过程中创建的 .il 脚本一律放入 `temp/` 子目录：
-
-```bash
-# 先确保 temp/ 存在
-mkdir -p temp
-
-# 文件写入 temp/ 目录
-# Write: temp/query_spacing.il
-
-# 执行时引用 temp/ 路径
-python allegro_client.py -f temp/query_spacing.il
-```
-
-完成后清理：删除临时 .il 文件，保留 `temp/` 目录。
-
-#### 规则 1：文件模式绝对不要用 `;` 注释！
-
-Bridge 服务端用 `strcat` 拼接代码行，虽然 `gets` 保留了换行符，但 `;` 注释在某些情况下会导致代码被意外注释。**已实测验证：含 `;` 注释的 .il 文件返回 nil，去掉注释后正常。**
-
-```skill
-; ❌ 错误 — 文件模式中分号注释会导致后续代码被吞
-; 获取所有层
-etch_layers = axlSubclassRoute()
-
-; ✅ 正确 — 文件模式不用注释
-etch_layers = axlSubclassRoute()
-```
-
-#### 规则 2：简单查询优先用 REPL 单行模式
-
-```bash
-# 一步搞定：查询 + 转换单位
-python allegro_client.py "axlMKSConvert(axlCNSGetSpacing(\"\" \"TOP\" 'line_line) \"design\" \"MILS\")"
-```
-
-比写文件→执行→看结果快得多，适合快速探索。
-
-#### 规则 3：返回值解析
-
-Bridge 输出格式：
-```
-SUCCESS
-<value>
-```
-
-- `<value>` 用 SKILL `%L` 格式化，`nil` 显示为字面量 `nil`，数字直接显示
-- 如果返回 `t` 但期望数字，说明函数在该上下文中返回了布尔值（可能是约束存在性而非值），需换查询方式
-- `printf` 输出进入 Allegro Command Window，不回传给 Bridge（只有最后表达式的值回传）
-
-#### 规则 4：单位转换公式
-
-```skill
-value_mils = axlMKSConvert(raw_value "design" "MILS")
-value_mm   = axlMKSConvert(raw_value "design" "MILLIMETERS")
-```
-
-`axlCNSGetSpacing` 返回值是设计单位（DBU），具体单位取决于设计设置（常见为 μm）。
+### 2. IPC 通信与执行流程
+1. **代码下发**：`allegro_client.py` 将命令写入 `vibe_in.il`。
+2. **服务端读取**：Allegro 后台 `vibe_server.il` 定时轮询并读取脚本。
+3. **执行代码**：Allegro 运行时通过 `evalstring` 执行。
+4. **日志捕获**：终端输出与表达式返回值写入 `vibe_out.log`。
+5. **获取结果**：`allegro_client.py` 读取 `vibe_out.log` 变化并输出到 CLI。
 
 ---
 
-## Phase 3: 调试迭代
+## Phase 3: 调试与迭代反馈
 
-常见问题速查：
+### 1. 调试与纠偏流程
+- **发生错误或异常**（报错、返回 `nil` 或格式不符）：分析根因（入参大小写、层名称错误、结构层级偏移等），修改后返回 **Phase 2** 重新测试。
+- **验证通过**：输出完全符合需求后，进入 **Phase 4**。
 
-| 症状 | 原因 | 解决 |
-|------|------|------|
-| 文件模式返回 `nil` | 文件含 `;` 注释 | 去掉所有注释 |
-| 返回 `t` 但期望数值 | 约束返回布尔值 | 用 `nil` 参数查所有约束看结构 |
-| `printf` 的调试信息看不到 | `printf` 输出到 Allegro 窗口 | 正常现象，把关键数据放在最后一行返回 |
-| REPL 模式字符串含引号报错 | Windows 命令行引号解析 | 用文件模式或转义 `\"` |
-| 返回 `75.0` 不知单位 | 设计单位未确认 | 用 `axlMKSConvert` 转换后同时输出 mils 和 mm |
-
-### 调试策略
-1. **先用 REPL 验证单个函数** — 确认函数存在且参数正确
-2. **用 `nil` 参数展开全部数据** — 如 `axlCNSGetSpacing("" "TOP" nil)` 不加约束筛选
-3. **逐步增加复杂度** — 验证通过后再写到 .il 文件
+### 2. 调试策略
+- **分步验证**：复杂逻辑先用**单行内联模式**逐个验证单个 API，确认无误后再组装。
+- **宽松查询**：无法确定筛选条件时，先传入宽松参数（如 `""` / `nil`）观察全量返回数据。
+- **全量运行测试**：合并为完整 `.il` 文件后，必须执行一次 `python allegro_client.py -f temp/<file>.il` 进行完整测试。
+  - 若脚本生成报表或导出日志，需检查输出内容的正确性。
+  - 确保最终代码无报错且满足用户需求。
 
 ---
 
-## Phase 4: 呈现结果
+## Phase 4: 验证、归档与沉淀
 
-- 同时展示设计单位和常用单位（mils / mm）
-- 标注查询参数（层名、约束集名称）
-- 简要说明使用的函数，方便用户复现
+任务完成后执行以下操作：
 
----
+### 1. 结果验证
+任务完成前，确保已在真实 Allegro PCB 环境中成功运行并获取预期结果。
 
-## Phase 5: 清理、自我验证归档与知识沉淀
+### 2. 正式产物归档
+将验证通过的代码从 `temp/` 移动至 **`archive/`** 目录（如 `archive/get_component_list.il`）。
 
-每次完成脚本开发后，必须执行以下规范的收尾工作：
+### 3. 环境清理
+清理 `temp/` 目录中的临时脚本和日志文件，仅保留空的 `temp/` 文件夹。
 
-### 1. 自我验证与自动归档
-- **自我验证**：在宣称任务完成前，必须自己运行脚本，并真实读取输出内容（桥接返回或日志文件），确保得到的数据完全符合用户预期。
-- **自动归档**：待用户确认功能无误后，将完成的 `.il` 脚本整理后移动/保存到 `archive/` 文件夹中，并给予规范命名（如 `get_component_info.il`）。
-
-### 2. 清理临时文件夹
-- 归档完成后，主动删除 `temp/` 目录下本次任务产生的所有残留临时 `.il` 测试脚本、错误日志等中间文件。
-- 坚决杜绝把 `temp/` 文件夹搞得乱糟糟。
-
-### 3. 沉淀至全局函数库
-- 脚本归档后，梳理本次用到的新 Allegro SKILL 函数。
-- 自动将这些函数的使用方法、参数解析和示例代码，汇总并追加到 [`references/skill_library.md`](./references/skill_library.md) 文件中。
-- **效率提升原则**：在后续所有的 coding 过程中，**必须优先查阅 `references/skill_library.md` 寻找答案**。只有该文件没有时，再去查阅 NotebookLM。这将极大增加效率，让本 Skill 越用越聪明。
-
----
-
-## SKILL 函数参考
-
-**执行前请优先查阅 [`references/skill_library.md`](./references/skill_library.md)**，其中包含本项目中已沉淀和验证过的 SKILL API 函数详解（函数签名、参数说明、返回值、代码示例、已知陷阱）。
-
-以下是本地知识库已覆盖的主题快速索引：
-- 数据库提取 (`axlDBGetDesign`)
-- 符号与器件属性 (`symbol->refdes`, `symbol->bBox`, `symbol->pins`, `pin->definition`, `padstack->drillDiameter`, `padstack->pads`)
-- 文件与 I/O (`outfile`, `fprintf`/`sprintf`, `close`)
-- 字符串操作 (`substring`)
-- UI 与用户交互 (`axlUIViewFileCreate`, `axlMsgPut`)
-- 泪滴与连接检查 (`axlDBGetConnect`, 泪滴检测原理)
-- 字符串匹配 (`pcreMatchp` vs `rexCompile` 陷阱)
-- 网络与过孔（遍历 `nets→branches→children`）
-- 约束查询 (`axlCNSGetSpacing`, `axlCNSGetPhysical`)
-- 层操作 (`axlSubclassRoute`, `axlGetParam`)
-- 单位转换 (`axlMKSConvert`)
-
----
-
-## 示例：完整的查询任务
-
-用户问："查一下 TOP 层 line to line 间距"
-
-### 执行过程：
-
-**Step 1** — 查本地知识库 `references/skill_library.md`，找到 `axlCNSGetSpacing` 和 `axlMKSConvert`。
-
-**Step 2** — 确认后用 REPL 单行执行：
-```bash
-python allegro_client.py "axlCNSGetSpacing(\"\" \"TOP\" 'line_line)"
-```
-→ 得到 `75.0`
-
-**Step 3** — 转换单位确认：
-```bash
-python allegro_client.py "axlMKSConvert(75.0 \"design\" \"MILS\")"
-```
-→ 得到 `2.952756` mils
-
-**Step 4** — 呈现结果："TOP 层 line-to-line 间距为 75 μm (0.075 mm / ~2.95 mils)"
-
----
-
-## 边界情况处理
-
-- **设计未打开**：提示用户在 Allegro 中打开设计
-- **Server 未启动**：提示用户执行 `skill load("vibe_server.il")`（加载即启动）
-- **Bridge 超时**：检查 Allegro 是否响应、workspace 目录权限
-- **NotebookLM 查询限额**：免费账号每天 50 次查询，注意节约使用
-- **约束集非 DEFAULT**：如果 `""` 返回 nil，需要先获取可用约束集列表
-- **层名不匹配**：先用 `axlSubclassRoute()` 获取实际层名
+### 4. 知识沉淀
+- **整理经验**：梳理调试中发现的关键点（生僻 API 参数规则、数据格式、转换细节等）。
+- **更新知识库**：将整理后的 API 说明、参数解析与代码示例追加到 **`references/skill_library.md`**。
+- **持续积累**：通过沉淀知识，提升后续 Phase 1A 检索本地库的命中率。

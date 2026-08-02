@@ -1,0 +1,216 @@
+<mxfile host="65bd71144e">
+    <diagram id="framework" name="Allegro Vibe Framework">
+        <mxGraphModel dx="3626" dy="1139" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1200" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="2" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+                    <mxGeometry x="760" y="25" width="690" height="890" as="geometry"/>
+                </mxCell>
+                <mxCell id="bg_kb" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fad9d5;strokeColor=#ae4132;" parent="1" vertex="1">
+                    <mxGeometry x="-40" y="140" width="280" height="660" as="geometry"/>
+                </mxCell>
+                <mxCell id="title_kb" value="&lt;b&gt;&lt;font style=&quot;font-size: 18px; color: #335577;&quot;&gt;知识库模块 (API查询系统)&lt;/font&gt;&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+                    <mxGeometry x="-10" y="140" width="220" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="bg_agent" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+                    <mxGeometry x="360" y="140" width="380" height="660" as="geometry"/>
+                </mxCell>
+                <mxCell id="bg_ipc" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="800" y="150" width="240" height="660" as="geometry"/>
+                </mxCell>
+                <mxCell id="title_ipc" value="&lt;b style=&quot;color: rgb(63, 63, 63); scrollbar-color: rgb(226, 226, 226) rgb(251, 251, 251);&quot;&gt;&lt;font style=&quot;color: rgb(63, 63, 63); scrollbar-color: rgb(226, 226, 226) rgb(251, 251, 251); font-size: 18px;&quot;&gt;IPC 文件系统桥梁&lt;/font&gt;&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+                    <mxGeometry x="830" y="150" width="180" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="bg_allegro" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="1080" y="150" width="340" height="660" as="geometry"/>
+                </mxCell>
+                <mxCell id="title_allegro" value="&lt;b&gt;&lt;font style=&quot;font-size: 18px; color: rgb(114, 28, 36);&quot;&gt;Cadence Allegro&lt;/font&gt;&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+                    <mxGeometry x="1150" y="150" width="200" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="user_req" value="&lt;b&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;用户需求&lt;/font&gt;&lt;/b&gt;&lt;br&gt;(自然语言输入)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#cce5ff;strokeColor=#b8daff;fontColor=#004085;strokeWidth=2;shadow=1;" parent="1" vertex="1">
+                    <mxGeometry x="460" y="30" width="180" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="local_db" value="&lt;b&gt;本地知识归档&lt;/b&gt;&lt;br&gt;(skill_library.md)" style="shape=document;whiteSpace=wrap;html=1;boundedLbl=1;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#333333;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry y="190" width="200" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="nlm_title" value="&lt;b&gt;↓ NotebookLM API 自动问答流 ↓&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontColor=#666666;" parent="1" vertex="1">
+                    <mxGeometry y="270" width="200" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="nlm_auth" value="&lt;b&gt;auth_manager.py&lt;/b&gt;&lt;br&gt;检查鉴权 / 引导 Google 登录" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontColor=#333333;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry y="310" width="200" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="nlm_notebook" value="&lt;b&gt;notebook_manager.py&lt;/b&gt;&lt;br&gt;检索 / 添加 / 激活目标笔记本" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontColor=#333333;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry y="400" width="200" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="nlm_ask" value="&lt;b&gt;ask_question.py&lt;/b&gt;&lt;br&gt;拉起无头浏览器发送查询获取答案" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontColor=#333333;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry y="490" width="200" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="nlm_followup" value="&lt;b&gt;Gap 分析与自动追问&lt;/b&gt;&lt;br&gt;回答&quot;Is that ALL you need?&quot;" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;fillColor=#e1d5e7;strokeColor=#9673a6;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry y="580" width="200" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="nlm_synthesize" value="&lt;b&gt;信息 Synthesize (综合)&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry y="680" width="200" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="phase1" value="&lt;b&gt;A: 需求分析与查询&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#333333;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="470" y="190" width="160" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="phase2" value="&lt;b&gt;B: 编写 SKILL 代码&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#333333;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="470" y="300" width="160" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="py_client" value="&lt;b&gt;allegro_client.py&lt;/b&gt;&lt;br&gt;(通信下发客户端)&lt;br&gt;----------------------------------&lt;br&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;span style=&quot;font-size: 11px;&quot;&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &lt;b&gt;支持 3 种运行模式:&lt;/b&gt;&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; 1. &lt;b&gt;文件执行&lt;/b&gt; (-f file.il)&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; 2. &lt;b&gt;内联代码&lt;/b&gt; (&quot;code&quot;)&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; 3. &lt;b&gt;交互终端&lt;/b&gt; (REPL)&lt;/span&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="450" y="400" width="200" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="phase3" value="&lt;b&gt;C: 调试与迭代&lt;/b&gt;&lt;br&gt;(AI 分析运行结果)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#333333;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="470" y="580" width="160" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="phase5" value="&lt;b&gt;D: 沉淀与清理&lt;/b&gt;&lt;br&gt;(更新知识并归档)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#333333;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="470" y="700" width="160" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="final_output" value="&lt;b&gt;最终产物：归档的 SKILL 脚本文件 (.il)&lt;/b&gt;" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#333333;strokeWidth=2;size=20;shadow=1;" parent="1" vertex="1">
+                    <mxGeometry x="420" y="860" width="260" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="vibe_in" value="&lt;b&gt;vibe_in.il&lt;/b&gt;&lt;br&gt;(临时代码文件)" style="shape=document;whiteSpace=wrap;html=1;boundedLbl=1;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#333333;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="840" y="320" width="160" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="vibe_out" value="&lt;b&gt;vibe_out.log&lt;/b&gt;&lt;br&gt;(执行结果/日志)" style="shape=document;whiteSpace=wrap;html=1;boundedLbl=1;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#333333;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="840" y="530" width="160" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="skill_server" value="&lt;b&gt;vibe_server.il&lt;/b&gt;&lt;br&gt;(后台定时轮询服务)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fad7ac;strokeColor=#b46504;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="1170" y="325" width="160" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="allegro_eval" value="&lt;b&gt;Allegro 运行时环境&lt;/b&gt;&lt;br&gt;(evalstring 安全执行代码)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fad7ac;strokeColor=#b46504;fontColor=#333333;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry x="1160" y="470" width="180" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_nlm_1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#76608A;strokeWidth=2;" parent="1" source="nlm_auth" target="nlm_notebook" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_nlm_2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#76608A;strokeWidth=2;" parent="1" source="nlm_notebook" target="nlm_ask" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_nlm_3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#76608A;strokeWidth=2;" parent="1" source="nlm_ask" target="nlm_followup" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_nlm_4" value="发现信息缺失(追问)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#B85450;strokeWidth=2;fontColor=#CC0000;labelBackgroundColor=#ffffff;labelBorderColor=#d7d7d7;" parent="1" source="nlm_followup" target="nlm_ask" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="-30" y="610"/>
+                            <mxPoint x="-30" y="515"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e_nlm_5" value="信息完整" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#2D7600;strokeWidth=2;fontColor=#2D7600;labelBackgroundColor=#ffffff;labelBorderColor=#d7d7d7;" parent="1" source="nlm_followup" target="nlm_synthesize" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_p1_local" value="1A:优先查询本地" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#2D7600;fontColor=#2D7600;strokeWidth=2;labelBackgroundColor=#ffffff;labelBorderColor=#d7d7d7;startArrow=classic;endArrow=classic;" parent="1" source="local_db" target="phase1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="380" y="200"/>
+                            <mxPoint x="380" y="200"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e_p1_nlm" value="1B:本地未命中，触发 NotebookLM 查询" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#76608A;fontColor=#76608A;strokeWidth=2;labelBackgroundColor=#ffffff;labelBorderColor=#d7d7d7;" parent="1" source="phase1" target="nlm_auth" edge="1">
+                    <mxGeometry x="0.1733" relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="280" y="230"/>
+                            <mxPoint x="280" y="335"/>
+                        </Array>
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e_nlm_return" value="返回综合解答" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#0050B3;fontColor=#0050B3;strokeWidth=2;labelBackgroundColor=#ffffff;labelBorderColor=#d7d7d7;" parent="1" source="nlm_synthesize" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="320" y="700"/>
+                            <mxPoint x="320" y="290"/>
+                            <mxPoint x="510" y="290"/>
+                        </Array>
+                        <mxPoint x="510" y="250" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e_user_p1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#004085;strokeWidth=3;" parent="1" source="user_req" target="phase1" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_p1_p2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#2D7600;strokeWidth=2;" parent="1" source="phase1" target="phase2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_p2_py" value="2. 触发命令" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#2D7600;fontColor=#2D7600;strokeWidth=2;labelBackgroundColor=#ffffff;labelBorderColor=#d7d7d7;" parent="1" source="phase2" target="py_client" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_py_p3" value="9:获取Allegro返回日志" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#2D7600;fontColor=#2D7600;strokeWidth=2;labelBackgroundColor=#ffffff;labelBorderColor=#d7d7d7;" parent="1" source="py_client" target="phase3" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_p3_p2" value="失败: AI 分析并重试" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#B85450;fontColor=#B85450;strokeWidth=2;labelBackgroundColor=#ffffff;labelBorderColor=#d7d7d7;" parent="1" source="phase3" target="phase2" edge="1">
+                    <mxGeometry x="-0.1818" relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="390" y="610"/>
+                            <mxPoint x="390" y="330"/>
+                        </Array>
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e_p3_p5" value="成功: 进入收尾" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#2D7600;fontColor=#2D7600;strokeWidth=2;labelBackgroundColor=#ffffff;labelBorderColor=#d7d7d7;" parent="1" source="phase3" target="phase5" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_p5_db" value="丰富本地经验 (归档更新)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;dashed=1;strokeColor=#0050B3;fontColor=#0050B3;strokeWidth=2;labelBackgroundColor=#ffffff;labelBorderColor=#d7d7d7;" parent="1" source="phase5" target="local_db" edge="1">
+                    <mxGeometry x="0.3871" relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="-130" y="730"/>
+                            <mxPoint x="-130" y="220"/>
+                        </Array>
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e_p5_final" value="输出" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#333333;fontColor=#333333;strokeWidth=3;labelBackgroundColor=#ffffff;labelBorderColor=#d7d7d7;" parent="1" source="phase5" target="final_output" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_py_in" value="3. 写入代码 (文件 IO)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#D6B656;fontColor=#856404;strokeWidth=2;labelBackgroundColor=#ffffff;labelBorderColor=#d7d7d7;" parent="1" source="py_client" target="vibe_in" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="710" y="460"/>
+                            <mxPoint x="710" y="345"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e_in_server" value="4. 轮询读取" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#D6B656;fontColor=#856404;strokeWidth=2;labelBackgroundColor=#ffffff;labelBorderColor=#d7d7d7;" parent="1" source="vibe_in" target="skill_server" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_server_eval" value="5. 注入执行" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#B85450;fontColor=#721c24;strokeWidth=2;labelBackgroundColor=#ffffff;labelBorderColor=#d7d7d7;" parent="1" source="skill_server" target="allegro_eval" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_eval_server" value="6. 捕获执行结果" style="edgeStyle=orthogonalEdgeStyle;rounded=1;dashed=1;strokeColor=#B85450;fontColor=#721c24;strokeWidth=2;labelBackgroundColor=#ffffff;labelBorderColor=#d7d7d7;" parent="1" source="allegro_eval" target="skill_server" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="1370" y="510"/>
+                            <mxPoint x="1370" y="355"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e_server_out" value="7. 写入输出日志" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#D6B656;fontColor=#856404;strokeWidth=2;labelBackgroundColor=#ffffff;labelBorderColor=#d7d7d7;" parent="1" source="skill_server" target="vibe_out" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="1110" y="370"/>
+                            <mxPoint x="1110" y="565"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="e_out_py" value="8. 轮询读取日志 (IO)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#D6B656;fontColor=#856404;strokeWidth=2;labelBackgroundColor=#ffffff;labelBorderColor=#d7d7d7;" parent="1" source="vibe_out" target="py_client" edge="1">
+                    <mxGeometry x="0.1489" relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="710" y="555"/>
+                            <mxPoint x="710" y="490"/>
+                        </Array>
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="title_agent" value="&lt;b&gt;&lt;font style=&quot;font-size: 18px; color: rgb(73, 80, 87);&quot;&gt;AI Agent&amp;nbsp; skill&lt;/font&gt;&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+                    <mxGeometry x="470" y="140" width="160" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="&lt;b style=&quot;color: rgb(63, 63, 63); scrollbar-color: rgb(226, 226, 226) rgb(251, 251, 251);&quot;&gt;&lt;font style=&quot;color: rgb(63, 63, 63); scrollbar-color: rgb(226, 226, 226) rgb(251, 251, 251); font-size: 18px;&quot;&gt;Allegro-vibe-bridge&lt;/font&gt;&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="1015" y="45" width="180" height="40" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
