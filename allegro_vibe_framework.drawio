@@ -1,10 +1,10 @@
 <mxfile host="65bd71144e">
     <diagram id="framework" name="Allegro Vibe Framework">
-        <mxGraphModel dx="3626" dy="1139" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1200" math="0" shadow="0">
+        <mxGraphModel dx="2406" dy="1144" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1200" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
-                <mxCell id="2" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+                <mxCell id="2" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
                     <mxGeometry x="760" y="25" width="690" height="890" as="geometry"/>
                 </mxCell>
                 <mxCell id="bg_kb" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fad9d5;strokeColor=#ae4132;" parent="1" vertex="1">
@@ -37,17 +37,14 @@
                 <mxCell id="nlm_title" value="&lt;b&gt;↓ NotebookLM API 自动问答流 ↓&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontColor=#666666;" parent="1" vertex="1">
                     <mxGeometry y="270" width="200" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="nlm_auth" value="&lt;b&gt;auth_manager.py&lt;/b&gt;&lt;br&gt;检查鉴权 / 引导 Google 登录" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontColor=#333333;strokeWidth=2;" parent="1" vertex="1">
+                <mxCell id="nlm_auth" value="&lt;b&gt;notebooklm login&lt;/b&gt;&lt;br&gt;检查鉴权 / 引导 Google 登录" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontColor=#333333;strokeWidth=2;" parent="1" vertex="1">
                     <mxGeometry y="310" width="200" height="50" as="geometry"/>
                 </mxCell>
-                <mxCell id="nlm_notebook" value="&lt;b&gt;notebook_manager.py&lt;/b&gt;&lt;br&gt;检索 / 添加 / 激活目标笔记本" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontColor=#333333;strokeWidth=2;" parent="1" vertex="1">
-                    <mxGeometry y="400" width="200" height="50" as="geometry"/>
+                <mxCell id="nlm_notebook" value="&lt;b&gt;notebooklm use&lt;/b&gt;&lt;br&gt;设置目标笔记本上下文" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontColor=#333333;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry y="435" width="200" height="50" as="geometry"/>
                 </mxCell>
-                <mxCell id="nlm_ask" value="&lt;b&gt;ask_question.py&lt;/b&gt;&lt;br&gt;拉起无头浏览器发送查询获取答案" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontColor=#333333;strokeWidth=2;" parent="1" vertex="1">
-                    <mxGeometry y="490" width="200" height="50" as="geometry"/>
-                </mxCell>
-                <mxCell id="nlm_followup" value="&lt;b&gt;Gap 分析与自动追问&lt;/b&gt;&lt;br&gt;回答&quot;Is that ALL you need?&quot;" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;fillColor=#e1d5e7;strokeColor=#9673a6;strokeWidth=2;" parent="1" vertex="1">
-                    <mxGeometry y="580" width="200" height="60" as="geometry"/>
+                <mxCell id="nlm_ask" value="&lt;b&gt;notebooklm ask&lt;/b&gt;&lt;br&gt;通过 CLI 发送查询获取答案" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontColor=#333333;strokeWidth=2;" parent="1" vertex="1">
+                    <mxGeometry y="560" width="200" height="50" as="geometry"/>
                 </mxCell>
                 <mxCell id="nlm_synthesize" value="&lt;b&gt;信息 Synthesize (综合)&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;strokeWidth=2;" parent="1" vertex="1">
                     <mxGeometry y="680" width="200" height="40" as="geometry"/>
@@ -88,19 +85,10 @@
                 <mxCell id="e_nlm_2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#76608A;strokeWidth=2;" parent="1" source="nlm_notebook" target="nlm_ask" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="e_nlm_3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#76608A;strokeWidth=2;" parent="1" source="nlm_ask" target="nlm_followup" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="e_nlm_4" value="发现信息缺失(追问)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#B85450;strokeWidth=2;fontColor=#CC0000;labelBackgroundColor=#ffffff;labelBorderColor=#d7d7d7;" parent="1" source="nlm_followup" target="nlm_ask" edge="1">
+                <mxCell id="e_nlm_3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#76608A;strokeWidth=2;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="nlm_ask" target="nlm_synthesize" edge="1">
                     <mxGeometry relative="1" as="geometry">
-                        <Array as="points">
-                            <mxPoint x="-30" y="610"/>
-                            <mxPoint x="-30" y="515"/>
-                        </Array>
+                        <mxPoint x="100" y="580" as="targetPoint"/>
                     </mxGeometry>
-                </mxCell>
-                <mxCell id="e_nlm_5" value="信息完整" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#2D7600;strokeWidth=2;fontColor=#2D7600;labelBackgroundColor=#ffffff;labelBorderColor=#d7d7d7;" parent="1" source="nlm_followup" target="nlm_synthesize" edge="1">
-                    <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="e_p1_local" value="1A:优先查询本地" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#2D7600;fontColor=#2D7600;strokeWidth=2;labelBackgroundColor=#ffffff;labelBorderColor=#d7d7d7;startArrow=classic;endArrow=classic;" parent="1" source="local_db" target="phase1" edge="1">
                     <mxGeometry relative="1" as="geometry">
@@ -207,7 +195,7 @@
                 <mxCell id="title_agent" value="&lt;b&gt;&lt;font style=&quot;font-size: 18px; color: rgb(73, 80, 87);&quot;&gt;AI Agent&amp;nbsp; skill&lt;/font&gt;&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
                     <mxGeometry x="470" y="140" width="160" height="40" as="geometry"/>
                 </mxCell>
-                <mxCell id="3" value="&lt;b style=&quot;color: rgb(63, 63, 63); scrollbar-color: rgb(226, 226, 226) rgb(251, 251, 251);&quot;&gt;&lt;font style=&quot;color: rgb(63, 63, 63); scrollbar-color: rgb(226, 226, 226) rgb(251, 251, 251); font-size: 18px;&quot;&gt;Allegro-vibe-bridge&lt;/font&gt;&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                <mxCell id="3" value="&lt;b style=&quot;color: rgb(63, 63, 63); scrollbar-color: rgb(226, 226, 226) rgb(251, 251, 251);&quot;&gt;&lt;font style=&quot;color: rgb(63, 63, 63); scrollbar-color: rgb(226, 226, 226) rgb(251, 251, 251); font-size: 18px;&quot;&gt;Allegro vibe bridge&lt;/font&gt;&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
                     <mxGeometry x="1015" y="45" width="180" height="40" as="geometry"/>
                 </mxCell>
             </root>

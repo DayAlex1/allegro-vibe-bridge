@@ -61,10 +61,9 @@ flowchart TD
     subgraph KnowledgeSystem["Knowledge Base System"]
         direction TD
         LocalDB["Local Knowledge Base<br>(references/skill_library.md)"]:::ipc
-        NLM_Auth["auth_manager.py<br>(Authentication)"]:::nlm
-        NLM_NB["notebook_manager.py<br>(Notebook Management)"]:::nlm
-        NLM_Ask["ask_question.py<br>(NotebookLM API Query)"]:::nlm
-        NLM_Gap{"Gap Analysis<br>Is that ALL you need?"}:::nlm
+        NLM_Auth["notebooklm login<br>(Authentication)"]:::nlm
+        NLM_NB["notebooklm use<br>(Notebook Management)"]:::nlm
+        NLM_Ask["notebooklm ask<br>(NotebookLM API Query)"]:::nlm
         NLM_Syn["Information Synthesis"]:::nlm
     end
 
@@ -83,9 +82,7 @@ flowchart TD
     Phase1 <-->|"1A: Local Search"| LocalDB
     Phase1 -->|"1B: Fallback Query"| NLM_Auth
     
-    NLM_Auth --> NLM_NB --> NLM_Ask --> NLM_Gap
-    NLM_Gap -->|"Missing Info"| NLM_Ask
-    NLM_Gap -->|"Complete"| NLM_Syn
+    NLM_Auth --> NLM_NB --> NLM_Ask --> NLM_Syn
     NLM_Syn -->|"Response"| Phase1
 
     Phase1 --> Phase2
@@ -126,7 +123,7 @@ flowchart TD
 
 ## Knowledge Base Setup
 
-AI agents can query the SKILL API knowledge base via [notebooklm-skill](https://github.com/PleasePrompto/notebooklm-skill) to obtain accurate function signatures, parameter descriptions, and code examples.
+AI agents can query the SKILL API knowledge base via CLI commands provided by [notebooklm-py](https://github.com/teng-lin/notebooklm-py) to obtain accurate function signatures, parameter descriptions, and code examples.
 
 ### Setup Instructions
 1. Obtain Cadence SKILL documentation (e.g., *SKILL Language User Guide*, *Allegro SKILL API Reference*).

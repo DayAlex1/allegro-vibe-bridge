@@ -61,10 +61,9 @@ flowchart TD
     subgraph KnowledgeSystem["知识库模块 (API 查询系统)"]
         direction TD
         LocalDB["本地知识库<br>(references/skill_library.md)"]:::ipc
-        NLM_Auth["auth_manager.py<br>(身份鉴权与登录)"]:::nlm
-        NLM_NB["notebook_manager.py<br>(笔记本管理)"]:::nlm
-        NLM_Ask["ask_question.py<br>(NotebookLM API 查询)"]:::nlm
-        NLM_Gap{"Gap 分析与追问<br>Is that ALL you need?"}:::nlm
+        NLM_Auth["notebooklm login<br>(身份鉴权与登录)"]:::nlm
+        NLM_NB["notebooklm use<br>(笔记本管理)"]:::nlm
+        NLM_Ask["notebooklm ask<br>(NotebookLM API 查询)"]:::nlm
         NLM_Syn["信息综合 (Synthesis)"]:::nlm
     end
 
@@ -83,9 +82,7 @@ flowchart TD
     Phase1 <-->|"1A: 优先本地查询"| LocalDB
     Phase1 -->|"1B: 未命中触发"| NLM_Auth
     
-    NLM_Auth --> NLM_NB --> NLM_Ask --> NLM_Gap
-    NLM_Gap -->|"信息缺失(追问)"| NLM_Ask
-    NLM_Gap -->|"信息完整"| NLM_Syn
+    NLM_Auth --> NLM_NB --> NLM_Ask --> NLM_Syn
     NLM_Syn -->|"返回解答"| Phase1
 
     Phase1 --> Phase2
@@ -128,7 +125,7 @@ flowchart TD
 
 ## 知识库配置（可选但推荐）
 
-AI Agent 可通过 [notebooklm-skill](https://github.com/PleasePrompto/notebooklm-skill) 查询 NotebookLM 知识库，获取准确的 SKILL API 函数签名、参数说明与代码范例。
+AI Agent 可通过 [notebooklm-py](https://github.com/teng-lin/notebooklm-py) 提供的 CLI 命令查询 NotebookLM 知识库，获取准确的 SKILL API 函数签名、参数说明与代码范例。
 
 ### 创建步骤
 1. 获取 Cadence SKILL 相关官方文档（如 *SKILL Language User Guide*、*Allegro SKILL API Reference* 等）。

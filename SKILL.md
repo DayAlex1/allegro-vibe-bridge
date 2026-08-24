@@ -1,5 +1,5 @@
-﻿---
-name: allegro-vibe
+---
+name: allegro vibe bridge
 description: |
   Use this skill whenever the user wants to interact with Cadence Allegro PCB design through the Vibe Bridge — querying design data (stackup, constraints, components, nets), executing SKILL code in an open Allegro session, or debugging SKILL scripts. Triggers on: mentions of Allegro, SKILL, PCB, Cadence, constraint manager, stackup, layout queries, vibe bridge, or any request to "get/check/query/find" design parameters from a board file. Also triggers when the user references the allegro_vibe_bridge project or asks to "send code to Allegro".
 ---
@@ -58,7 +58,7 @@ Phase 4: 验证与清理归档 ───────► 确认结果无误后归
 ### 3. 前置检查
 - Allegro 已打开目标板文件 (Design)。
 - `vibe_server.il` 已在 Allegro 内加载（`load` 后自动监听）。
-- **外部知识库检查**：如需复杂 API 探索，检查是否可用 [notebooklm-skill](https://github.com/PleasePrompto/notebooklm-skill)，且 NotebookLM 包含相关笔记本。
+- **外部知识库检查**：如需复杂 API 探索，检查是否可用 [notebooklm-py](https://github.com/teng-lin/notebooklm-py)，且 NotebookLM 包含相关笔记本。
   - **笔记本内容要求**：包含 **SKILL 语法规范**与 **Allegro AXL 函数说明**（含参数解释与返回值约定）。
   - **缺失引导**：若缺少相关环境，主动询问用户是否需要协助配置。
 
@@ -73,7 +73,7 @@ Phase 4: 验证与清理归档 ───────► 确认结果无误后归
 
 ### 1B. 调用 NotebookLM 查询（本地库未命中时）
 若 `references/skill_library.md` 未命中：
-- 调用 [notebooklm-skill](https://github.com/PleasePrompto/notebooklm-skill) 向外部知识库查询。
+- 调用 [notebooklm-py](https://github.com/teng-lin/notebooklm-py) 提供的 CLI 命令向外部知识库查询。
 - 明确提供编程意图与待查询的函数/接口。
 - 结合查询结果进入 Phase 2 编写代码。
 
